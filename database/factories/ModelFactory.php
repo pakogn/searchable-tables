@@ -1,5 +1,7 @@
 <?php
 
+use App\PostCategory;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -9,7 +11,7 @@
 | you a convenient way to create models for testing and seeding your
 | database. Just tell the factory how a default model should look.
 |
-*/
+ */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\User::class, function (Faker\Generator $faker) {
@@ -20,5 +22,22 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Post::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence,
+        'body' => $faker->paragraph,
+        'post_category_id' => PostCategory::inRandomOrder()->pluck('id')->first(),
+        'created_at' => $date = $faker->dateTimeThisYear,
+        'updated_at' => $date,
+    ];
+});
+
+$factory->define(App\PostCategory::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->unique()->word,
+        'label' => $faker->unique()->word,
     ];
 });
